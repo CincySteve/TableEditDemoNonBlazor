@@ -1,0 +1,99 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+
+    string colWidth = "75px";
+    string enteredData = "entereddata";
+    string defaultData = "defaultdata";
+
+    List<List<TableCell>> BBDAllCellsList = new List<List<TableCell>>();
+
+    //BBDAllCellsList = new List<List<TableCell>>();
+
+    // Create some data
+    for (int rowIndex = 0; rowIndex <= 10; rowIndex++)
+        {
+        List<TableCell> bbdRowCellList = new List<TableCell>();
+
+        for (int colIndex = 0; colIndex < 5; colIndex++)
+            {
+            TableCell bbdCell = new TableCell();
+            bbdCell.Index_Row = rowIndex;
+            bbdCell.Index_Col = colIndex;
+            bbdCell.ColName = $"Col_{colIndex}";
+            bbdCell.Value_Dec = (rowIndex + 1) * 10 + colIndex;
+            bbdCell.Value_Formatted = bbdCell.Value_Dec.ToString("C0");
+            bbdCell.CSSClass = defaultData;
+
+            bbdRowCellList.Add(bbdCell);
+            } // next colSpec
+
+        BBDAllCellsList.Add(bbdRowCellList);
+        }
+
+    // Make a couple of the cells entered data
+    BBDAllCellsList[3][3].CSSClass = enteredData;
+    BBDAllCellsList[3][4].CSSClass = enteredData;
+}
+
+<script>
+    function onChange(id)
+    {
+        let x = id.value;
+        document.getElementById("demo").innerHTML = "You entered: " + x;
+    }
+</script>
+
+<p id="demo">Paragraph</p>
+
+<div id="" class=""
+     style="height: 350px">
+
+    <table>
+
+        <tbody>
+
+            @for (int row = 0; row <= 10; row++)
+                {
+                int yearIndex = row;
+                <tr>
+                    <td contenteditable="false" class="RowHeader" style="width: 30px">
+                        @BBDAllCellsList[yearIndex][0].Index_Row
+                    </td>
+
+                    @for (int col = 1; col < 5; col++)
+                        {
+                        int colIndex = col;
+                        string cellID = $"Cell{row}{col}";
+                        TableCell bbdCell = BBDAllCellsList[yearIndex][colIndex];
+
+                        @if (bbdCell.CSSClass == enteredData)
+                            {
+                            <td contenteditable="false" style="width: 75px">
+                                <input id="@cellID" type="text" style="width:75px; background-color: yellow;"
+                                    value="@bbdCell.Value_Formatted"
+                                    onFocus="this.select()"
+                                    onchange="onChange(@cellID);" />
+                            </td>
+                            }
+                        else
+                            {
+                            <td contenteditable="false" style="width: 75px">
+                                <input id="@cellID" type="text" style="width:75px; background-color: white;"
+                                    placeholder="@bbdCell.Value_Formatted"
+                                    onFocus="this.select()"
+                                    onchange='onChange(@cellID);' />
+                            </td>
+                            }
+
+                        } @*end colIndex*@
+
+                </tr>
+
+                } @*end year*@
+
+        </tbody>
+    </table>
+
+</div>
